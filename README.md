@@ -90,16 +90,11 @@ R² = 0.87 | Residual SE = 0.41 (~±51%)
 
 ---
 
-### Model 15 — Log-linear + short-haul interaction best model
-Short-haul rail pricing is structurally different: terminal handling costs are fixed regardless of distance, so per-mile rates are much higher for short moves. Model 15 adds:
+### Model 16 — Log-linear with quadratic terms + short-haul interaction (best model)
+Short-haul rail pricing is structurally different: terminal handling costs are fixed regardless of distance, so per-mile rates are much higher for short moves. Model 16 adds:
+- Quadratic terms for log(miles), log(carloads), and log(weight_per_car)
 - A short-haul dummy (< 500 miles)
 - An interaction between short-haul and number of interchanges
-
----
-
-### Model 16 — Log-linear + short-haul interaction with quadratic terms (best model)
-Model 16 adds:
-- Quadratic terms for log(miles), log(carloads), and log(weight_per_car)
 
 ```
 log(Freight Revenue Real) ~ log(Estimated Short Line Miles) + short_haul +
