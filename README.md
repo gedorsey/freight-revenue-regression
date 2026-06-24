@@ -90,11 +90,22 @@ R² = 0.87 | Residual SE = 0.41 (~±51%)
 
 ---
 
+### Model 15 — Short-haul dummy + interaction, no quadratic terms (post-2021)
+Short-haul rail pricing is structurally different from long-haul: terminal handling costs are fixed regardless of distance, making per-mile rates much higher for short moves. Model 15 introduces a short-haul dummy variable (< 500 miles) and an interaction between short-haul and number of interchanges, but keeps all continuous predictors first-order. This served as a baseline to test whether adding quadratic terms was warranted.
+
+```
+log(Freight Revenue Real) ~ log(Estimated Short Line Miles) + short_haul +
+  log(Number of Carloads) + log(weight_per_car) + Number of Interchanges +
+  Car Ownership Code + STB Car Type + STCC2 + All Rail/Intermodal Code +
+  Hazardous/Bulk Material + Origin/Termination Freight Rate Territory +
+  Type of Move + short_haul:Number of Interchanges
+```
+
+---
+
 ### Model 16 — Log-linear with quadratic terms + short-haul interaction (best model)
-Short-haul rail pricing is structurally different: terminal handling costs are fixed regardless of distance, so per-mile rates are much higher for short moves. Model 16 adds:
+Model 16 adds:
 - Quadratic terms for log(miles), log(carloads), and log(weight_per_car)
-- A short-haul dummy (< 500 miles)
-- An interaction between short-haul and number of interchanges
 
 ```
 log(Freight Revenue Real) ~ log(Estimated Short Line Miles) + short_haul +
@@ -104,6 +115,8 @@ log(Freight Revenue Real) ~ log(Estimated Short Line Miles) + short_haul +
   Type of Move + I(log(miles)^2) + I(log(carloads)^2) + I(log(weight_per_car)^2) +
   short_haul:Number of Interchanges
 ```
+
+An ANOVA comparing Model 15 and Model 16 returned a very small p-value, confirming that the quadratic terms add statistically significant explanatory power.
 
 | Metric | Value |
 |---|---|
