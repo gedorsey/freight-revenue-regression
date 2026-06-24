@@ -412,7 +412,37 @@ plot(model13)
 
 
 # =============================================================================
-# 14. MODEL 16: QUADRATIC TERMS + SHORT-HAUL INTERACTION
+# 14. MODEL 15: SHORT-HAUL DUMMY + INTERACTION (no quadratic terms)
+# First-order model introducing short_haul as a factor. Used as a baseline
+# to test whether adding quadratic terms (model16) significantly improves fit.
+# =============================================================================
+
+# Create short-haul dummy (< 500 miles)
+dt_sample1[, short_haul := factor(as.integer(`Estimated Short Line Miles` < 500))]
+dt_test[,    short_haul := factor(as.integer(`Estimated Short Line Miles` < 500))]
+
+model15 <- lm(log(`Freight Revenue Real`) ~
+  log(`Estimated Short Line Miles`) +
+  short_haul +
+  log(`Number of Carloads`) +
+  log(weight_per_car) +
+  `Number of Interchanges` +
+  `Car Ownership Code` +
+  `STB Car Type` +
+  STCC2 +
+  `All Rail/Intermodal Code` +
+  `Hazardous/Bulk Material in Boxcar` +
+  `Origin Freight Rate Territory` +
+  `TerminationFreightRateTerritory` +
+  `Type of Move (inferred)` +
+  short_haul:`Number of Interchanges`,
+  data = dt_sample1)
+
+summary(model15)
+
+
+# =============================================================================
+# 15. MODEL 16: QUADRATIC TERMS + SHORT-HAUL INTERACTION
 # Short-haul rail pricing is structurally different from long-haul:
 # terminal handling costs are fixed, making per-mile rates much higher
 # =============================================================================
@@ -448,6 +478,9 @@ summary(model16)
 outliers16 <- which(abs(rstandard(model16)) > 3)
 length(outliers16)  # 1,162
 
+# ANOVA: test whether quadratic terms in model16 significantly improve on model15
+anova(model15, model16)
+# p-value is very small -> retain model16 (quadratic terms are justified)
 
 # =============================================================================
 # 15. EVALUATE MODEL 16 ON HELD-OUT TEST SET
